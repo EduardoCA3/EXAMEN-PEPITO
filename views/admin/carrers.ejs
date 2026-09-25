@@ -35,7 +35,7 @@
           <div class="card-header">
             <h6 class="mb-0" id="cardTitle">
               <i class="fa fa-plus me-2"></i>
-              Nueva Carrera
+              Nuevo Alumno
             </h6>
           </div>
 
@@ -75,13 +75,13 @@
               </div>
 
               <div class="mb-3">
-                <label for="code" class="form-label">Código</label>
+                <label for="code" class="form-label">Carrera</label>
                 <input
                   type="text"
-                  id="code"
-                  name="code"
+                  id="Carrera"
+                  name="Carrera"
                   class="form-control"
-                  placeholder="Ingrese el código..."
+                  placeholder="Ingrese la carrera..."
                   required
                 >
               </div>
@@ -149,41 +149,6 @@
           </div>
 
           <div class="card-body">
-
-            <!-- ================================================== -->
-            <!-- BLOQUE 7: BUSCADOR Y ACCIONES DEL LISTADO          -->
-            <!-- Busca por nombre, apellido, código o ciclo         -->
-            <!-- ================================================== -->
-            <div class="row g-2 align-items-center mb-3">
-
-              <div class="col-md-7">
-                <div class="input-group">
-                  <span class="input-group-text">
-                    <i class="fa fa-search"></i>
-                  </span>
-
-                  <input
-                    type="text"
-                    id="searchInput"
-                    class="form-control"
-                    placeholder="Buscar por nombre, apellido, código o ciclo..."
-                    onkeyup="buscar()"
-                  >
-                </div>
-              </div>
-
-              <div class="col-md-5 text-md-end">
-                <a
-                  href="/carrers/new"
-                  class="btn btn-success"
-                >
-                  <i class="fa fa-plus"></i>
-                  Agregar Registro
-                </a>
-              </div>
-
-            </div>
-
 
             <!-- ================================================== -->
             <!-- BLOQUE 8: TABLA                                    -->

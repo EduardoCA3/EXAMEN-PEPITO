@@ -10,24 +10,18 @@ export function home(req, res) {
 
   {
 
-   id: 1,
-
-   name: "Ingeniería de Sistemas",
-
-   lastname: "Sistemas",
-
-   code: "IS001",
-
-   cycle: 1
+  id: 1,
+  name: "Juan",
+  lastname: "Pérez",
+  carrera: "Ingeniería de Sistemas",
+  edad: 20
 
   },
 
   {
 
    id: 2,
-
    name: "Ingeniería Industrial",
-
    lastname: "Industrial",
 
    code: "II002",

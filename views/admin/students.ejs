@@ -1,0 +1,530 @@
+<% layout("layouts/admin2") %>
+
+
+
+<main class="main-content">
+
+ <div class="container-fluid">
+
+  
+
+  <!-- PAGE HEADER -->
+
+  <h3 class="mb-4">
+
+   <a href="/admin">
+
+    <i class="fa fa-graduation-cap me-2"></i>
+
+    Gestión Académica
+
+   </a>
+
+   / Alumnos
+
+  </h3>
+
+
+
+  <!-- CONTENEDOR DE ALERTAS DE NOTIFICACIÓN -->
+
+  <div id="alert-container"></div>
+
+
+
+  <div class="row">
+
+
+
+   <!-- FORMULARIO DE INPUTS -->
+
+   <div class="col-lg-4 col-md-5 mb-4">
+
+    <div class="card">
+
+     <div class="card-header">
+
+      <h6 class="mb-0" id="cardTitle">
+
+       <i class="fa fa-user-plus me-2"></i>
+
+       Nuevo Alumno
+
+      </h6>
+
+     </div>
+
+
+
+     <div class="card-body">
+
+      <form id="studentForm" onsubmit="agregar(event)">
+
+       <input type="hidden" id="studentId" value="">
+
+
+
+       <div class="mb-3">
+
+        <label for="name" class="form-label">Nombre</label>
+
+        <input
+
+         type="text"
+
+         id="name"
+
+         name="name"
+
+         class="form-control"
+
+         placeholder="Ingrese el nombre..."
+
+        >
+
+       </div>
+
+
+
+       <div class="mb-3">
+
+        <label for="lastname" class="form-label">Apellido</label>
+
+        <input
+
+         type="text"
+
+         id="lastname"
+
+         name="lastname"
+
+         class="form-control"
+
+         placeholder="Ingrese el apellido..."
+
+        >
+
+       </div>
+
+
+
+       <div class="mb-3">
+
+        <label for="carrera" class="form-label">Carrera</label>
+
+        <input
+
+         type="text"
+
+         id="carrera"
+
+         name="carrera"
+
+         class="form-control"
+
+         placeholder="Ingrese la carrera..."
+
+        >
+
+       </div>
+
+
+
+       <div class="mb-3">
+
+        <label for="edad" class="form-label">Edad</label>
+
+        <input
+
+         type="number"
+
+         id="edad"
+
+         name="edad"
+
+         class="form-control"
+
+         placeholder="Ingrese la edad..."
+
+        >
+
+       </div>
+
+
+
+       <div class="d-flex justify-content-end gap-2">
+
+        <button
+
+         type="button"
+
+         class="btn btn-outline-secondary"
+
+         onclick="limpiar(event)"
+
+        >
+
+         <i class="fa fa-refresh me-1"></i>
+
+         Limpiar
+
+        </button>
+
+
+
+        <button
+
+         type="submit"
+
+         class="btn btn-success"
+
+         id="btnGuardar"
+
+        >
+
+         <i class="fa fa-save me-1"></i>
+
+         Guardar
+
+        </button>
+
+       </div>
+
+      </form>
+
+     </div>
+
+    </div>
+
+   </div>
+
+
+
+   <!-- LISTADO DE ALUMNOS -->
+
+   <div class="col-lg-8 col-md-7 mb-4">
+
+    <div class="card">
+
+     <div class="card-header">
+
+      <h6 class="mb-0">
+
+       <i class="fa fa-users me-2"></i>
+
+       Lista de Alumnos
+
+      </h6>
+
+     </div>
+
+
+
+     <div class="card-body">
+
+      <div class="table-responsive">
+
+       <table class="table table-striped table-hover" id="studentsTable">
+
+        <thead>
+
+         <tr>
+
+          <th>ID</th>
+
+          <th>name</th>
+
+          <th>lastname</th>
+
+          <th>carrera</th>
+
+          <th>edad</th>
+
+          <th class="text-end">Acciones</th>
+
+         </tr>
+
+        </thead>
+
+        <tbody>
+
+         <% if (students && students.length > 0) { %>
+
+          <% for (const student of students) { %>
+
+           <tr>
+
+            <td><%= student.id %></td>
+
+            <td><%= student.name %></td>
+
+            <td><%= student.lastname %></td>
+
+            <td><%= student.carrera %></td>
+
+            <td><%= student.edad %></td>
+
+            <td class="text-end">
+
+             <button
+
+              class="btn btn-sm btn-outline-secondary me-1"
+
+              onclick="editar('<%= student.id %>', event)"
+
+             >
+
+              <i class="fa fa-edit"></i> Editar
+
+             </button>
+
+             <button
+
+              class="btn btn-sm btn-outline-danger"
+
+              onclick="eliminar('<%= student.id %>', event)"
+
+             >
+
+              <i class="fa fa-trash"></i> Eliminar
+
+             </button>
+
+            </td>
+
+           </tr>
+
+          <% } %>
+
+         <% } else { %>
+
+          <tr>
+
+           <td colspan="6" class="text-center text-muted py-4">
+
+            No se encontraron alumnos.
+
+           </td>
+
+          </tr>
+
+         <% } %>
+
+        </tbody>
+
+       </table>
+
+      </div>
+
+     </div>
+
+    </div>
+
+   </div>
+
+
+
+  </div>
+
+ </div>
+
+</main>
+
+
+
+<script>
+
+ let studentRows = document.getElementById("studentsTable").children[1].children.length;
+
+
+
+ function showAlert(message, type) {
+
+  const container = document.getElementById("alert-container");
+
+  container.innerHTML = `
+
+   <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+
+    ${message}
+
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+   </div>
+
+  `;
+
+ }
+
+
+
+ function limpiar(event) {
+
+  if(event) event.preventDefault();
+
+  document.getElementById("studentId").value = "";
+
+  document.getElementById("name").value = "";
+
+  document.getElementById("lastname").value = "";
+
+  document.getElementById("carrera").value = "";
+
+  document.getElementById("edad").value = "";
+
+  document.getElementById("cardTitle").innerHTML = '<i class="fa fa-user-plus me-2"></i> Nuevo Alumno';
+
+ }
+
+
+
+ function agregar(event) {
+
+  event.preventDefault();
+
+
+
+  let studentId = document.getElementById("studentId").value;
+
+  let name = document.getElementById("name").value.trim();
+
+  let lastname = document.getElementById("lastname").value.trim();
+
+  let carrera = document.getElementById("carrera").value.trim();
+
+  let edad = document.getElementById("edad").value.trim();
+
+  let parsedEdad = parseInt(edad, 10);
+
+
+
+  // Validación de inputs vacíos y edad entre 16 y 100 años
+
+  if (name === "" || lastname === "" || carrera === "" || edad === "") {
+
+   showAlert("Debes completar todos los datos.", "danger");
+    return;
+  }
+
+  if (isNaN(parsedEdad) || parsedEdad < 16 || parsedEdad > 100) {
+
+   showAlert("La edad debe estar entre 16 y 100 años", "danger");
+    return;
+  }
+
+
+  let studentsTable = document.getElementById("studentsTable");
+
+  let tbody = studentsTable.children[1];
+
+
+
+  if (studentId === "") {
+
+   // Agregar
+
+   studentRows++;
+
+   let tr = document.createElement("TR");
+
+   tr.innerHTML = `
+
+    <td>${studentRows}</td>
+
+    <td>${name}</td>
+
+    <td>${lastname}</td>
+
+    <td>${carrera}</td>
+
+    <td>${parsedEdad}</td>
+
+    <td class="text-end">
+
+     <button class="btn btn-sm btn-outline-secondary me-1" onclick="editar('${studentRows}', event)">
+
+      <i class="fa fa-edit"></i> Editar
+
+     </button>
+
+     <button class="btn btn-sm btn-outline-danger" onclick="eliminar('${studentRows}', event)">
+
+      <i class="fa fa-trash"></i> Eliminar
+
+     </button>
+
+    </td>
+
+   `;
+
+   tbody.appendChild(tr);
+
+   showAlert("Alumno agregado correctamente.", "success");
+
+   limpiar();
+
+  } else {
+
+   // Editar
+
+   for (let tr of tbody.children) {
+
+    if (tr.children[0].innerHTML.trim() === studentId) {
+
+     tr.children[1].innerHTML = name;
+
+     tr.children[2].innerHTML = lastname;
+
+     tr.children[3].innerHTML = carrera;
+
+     tr.children[4].innerHTML = parsedEdad;
+
+     showAlert("Alumno editado correctamente.", "success");
+
+     limpiar();
+
+     break;
+
+    }
+
+   }
+
+  }
+
+ }
+
+
+
+ function editar(id, event) {
+
+  let tr = event.currentTarget.parentElement.parentElement;
+
+
+
+  document.getElementById("cardTitle").innerHTML = '<i class="fa fa-edit me-2"></i> Editar Alumno';
+
+  document.getElementById("studentId").value = id;
+
+  document.getElementById("name").value = tr.children[1].innerHTML.trim();
+
+  document.getElementById("lastname").value = tr.children[2].innerHTML.trim();
+
+  document.getElementById("carrera").value = tr.children[3].innerHTML.trim();
+
+  document.getElementById("edad").value = tr.children[4].innerHTML.trim();
+
+ }
+
+
+
+ function eliminar(id, event) {
+
+  let tr = event.currentTarget.parentElement.parentElement;
+
+  tr.remove();
+
+  showAlert("Alumno eliminado correctamente.", "success");
+
+ }
+
+</script>
