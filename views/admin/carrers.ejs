@@ -1,287 +1,635 @@
 <!-- views/admin/carrers.ejs -->
 
-<% layout("layouts/admin2") %>
+<% layout("layouts/admin") %>
 
-<main class="main-content"> <div class="container-fluid">
-<!-- PAGE HEADER -->
-<h3 class="mb-4">
-  <a href="/admin/academic">
-    <i class="fa fa-book me-2"></i>
-    Gestión Académica
-  </a>
-  / Carreras
-</h3>
+<main class="main-content">
+  <div class="container-fluid">
+
+    <!-- ====================================================== -->
+    <!-- BLOQUE 1: ENCABEZADO DE LA PÁGINA                     -->
+    <!-- Muestra la ruta visual Gestión Académica / Carreras   -->
+    <!-- ====================================================== -->
+    <h3 class="mb-4">
+      <a href="/admin/academic">
+        <i class="fa fa-book me-2"></i>
+        Gestión Académica
+      </a>
+      / Carreras
+    </h3>
 
 
-<div class="row">
+    <!-- ====================================================== -->
+    <!-- BLOQUE 2: DISTRIBUCIÓN PRINCIPAL                      -->
+    <!-- Bootstrap divide la pantalla en formulario y listado  -->
+    <!-- ====================================================== -->
+    <div class="row">
 
-  <!-- ========================= -->
-  <!-- FORMULARIO -->
-  <!-- ========================= -->
-  <div class="col-lg-4 col-md-5 mb-4">
+      <!-- ==================================================== -->
+      <!-- BLOQUE 3: FORMULARIO PARA AGREGAR / EDITAR           -->
+      <!-- carrerID oculto permite saber si se crea o se edita  -->
+      <!-- ==================================================== -->
+      <div class="col-lg-4 col-md-5 mb-4">
 
-    <div class="card">
+        <div class="card">
 
-      <div class="card-header">
-        <h6 class="mb-0" id="cardTitle">
-          <i class="fa fa-plus me-2"></i>
-          Nueva Carrera
-        </h6>
-      </div>
-
-      <div class="card-body">
-
-        <form method="POST" action="/carrers">
-
-          <div class="mb-3">
-
-            <label for="name" class="form-label">
-              Nombre
-            </label>
-
-            <input type="hidden" name="" id="carrerId">
-
-            <input
-              type="text"
-              id="name"
-              name="name"
-              class="form-control"
-              placeholder="Ingrese el nombre de la carrera..."
-              required
-            >
+          <div class="card-header">
+            <h6 class="mb-0" id="cardTitle">
+              <i class="fa fa-plus me-2"></i>
+              Nueva Carrera
+            </h6>
           </div>
 
-          <div class="mb-3">
+          <div class="card-body">
 
-            <label for="name" class="form-label">
-              edad
-            </label>
+            <form method="POST" action="/carrers" id="carrerForm">
 
-            <input
-              type="text"
-              id="name"
-              name="name"
-              class="form-control"
-              placeholder="Ingrese el nombre de la carrera..."
-              required
-            >
+              <!-- ID oculto: vacío = nuevo registro / con valor = editar -->
+              <input type="hidden" id="carrerID">
+
+              <!-- ================================================== -->
+              <!-- BLOQUE 4: CAMPOS DEL FORMULARIO                    -->
+              <!-- Recoge nombre, apellido, código y ciclo            -->
+              <!-- ================================================== -->
+              <div class="mb-3">
+                <label for="name" class="form-label">Nombre</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  class="form-control"
+                  placeholder="Ingrese el nombre..."
+                  required
+                >
+              </div>
+
+              <div class="mb-3">
+                <label for="lastname" class="form-label">Apellido</label>
+                <input
+                  type="text"
+                  id="lastname"
+                  name="lastname"
+                  class="form-control"
+                  placeholder="Ingrese el apellido..."
+                  required
+                >
+              </div>
+
+              <div class="mb-3">
+                <label for="code" class="form-label">Código</label>
+                <input
+                  type="text"
+                  id="code"
+                  name="code"
+                  class="form-control"
+                  placeholder="Ingrese el código..."
+                  required
+                >
+              </div>
+
+              <div class="mb-3">
+                <label for="cycle" class="form-label">Ciclo</label>
+                <input
+                  type="text"
+                  id="cycle"
+                  name="cycle"
+                  class="form-control"
+                  placeholder="Ingrese el ciclo..."
+                  required
+                >
+              </div>
+
+              <!-- ================================================== -->
+              <!-- BLOQUE 5: BOTONES DEL FORMULARIO                   -->
+              <!-- Limpiar reinicia / Guardar agrega o edita          -->
+              <!-- ================================================== -->
+              <div class="d-flex justify-content-end gap-2">
+
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary"
+                  onclick="limpiar(event)"
+                >
+                  <i class="fa fa-refresh me-1"></i>
+                  Limpiar
+                </button>
+
+                <button
+                  type="submit"
+                  class="btn btn-success"
+                  id="btnGuardar"
+                  onclick="agregar(event)"
+                >
+                  <i class="fa fa-save me-1"></i>
+                  Guardar
+                </button>
+
+              </div>
+
+            </form>
 
           </div>
-
-
-          <div class="d-flex justify-content-end gap-2">
-
-            <button
-              class="btn btn-outline-secondary"
-              onclick="limpiar(event)"
-            >
-              <i class="fa fa-refresh me-1"></i>
-              Limpiar
-          </button>
-
-            <button
-              type="submit"
-              class="btn btn-success"
-              id="btnGuardar"
-              onclick="agregar(event)"
-            >
-              <i class="fa fa-save me-1"></i>
-              Guardar
-            </button>
-
-          </div>
-
-        </form>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- ========================= -->
-  <!-- LISTADO -->
-  <!-- ========================= -->
-  <div class="col-lg-8 col-md-7 mb-4">
-
-    <div class="card">
-
-      <div class="card-header">
-        <h6 class="mb-0">
-          <i class="fa fa-list me-2"></i>
-          Lista de Carreras
-        </h6>
-      </div>
-
-
-      <div class="card-body">
-
-        <!-- HEADER ACTIONS -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-
-          <div class="text-muted">
-            <i class="fa fa-graduation-cap me-1"></i>
-            Carreras registradas
-          </div>
-
-          <div>
-            <a
-              href="/carrers/new"
-              class="btn btn-success"
-            >
-              <i class="fa fa-plus"></i>
-              Agregar Registro
-            </a>
-          </div>
-
         </div>
 
-
-        <!-- TABLE -->
-        <div class="table-responsive">
-
-          <table class="table table-striped table-hover" id="carrers">
-
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th class="text-end">Acciones</th>
-              </tr>
-            </thead>
+      </div>
 
 
-            <tbody>
+      <!-- ==================================================== -->
+      <!-- BLOQUE 6: LISTADO DE REGISTROS                       -->
+      <!-- Muestra carreras/estudiantes en una tabla            -->
+      <!-- ==================================================== -->
+      <div class="col-lg-8 col-md-7 mb-4">
 
-              <% if (carrers && carrers.length > 0) { %>
+        <div class="card">
 
-                <% for (const carrer of carrers) { %>
+          <div class="card-header">
+            <h6 class="mb-0">
+              <i class="fa fa-list me-2"></i>
+              Lista de Carreras
+            </h6>
+          </div>
 
+          <div class="card-body">
+
+            <!-- ================================================== -->
+            <!-- BLOQUE 7: BUSCADOR Y ACCIONES DEL LISTADO          -->
+            <!-- Busca por nombre, apellido, código o ciclo         -->
+            <!-- ================================================== -->
+            <div class="row g-2 align-items-center mb-3">
+
+              <div class="col-md-7">
+                <div class="input-group">
+                  <span class="input-group-text">
+                    <i class="fa fa-search"></i>
+                  </span>
+
+                  <input
+                    type="text"
+                    id="searchInput"
+                    class="form-control"
+                    placeholder="Buscar por nombre, apellido, código o ciclo..."
+                    onkeyup="buscar()"
+                  >
+                </div>
+              </div>
+
+              <div class="col-md-5 text-md-end">
+                <a
+                  href="/carrers/new"
+                  class="btn btn-success"
+                >
+                  <i class="fa fa-plus"></i>
+                  Agregar Registro
+                </a>
+              </div>
+
+            </div>
+
+
+            <!-- ================================================== -->
+            <!-- BLOQUE 8: TABLA                                    -->
+            <!-- table-striped alterna filas / table-hover resalta  -->
+            <!-- ================================================== -->
+            <div class="table-responsive">
+
+              <table class="table table-striped table-hover" id="carrers">
+
+                <thead>
                   <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Código</th>
+                    <th>Ciclo</th>
+                    <th class="text-end">Acciones</th>
+                  </tr>
+                </thead>
 
-                    <td>
-                      <%= carrer.id %>
+                <tbody>
+
+                  <!-- ============================================ -->
+                  <!-- BLOQUE 9: RENDERIZADO EJS                    -->
+                  <!-- Si hay datos, EJS crea una fila por registro -->
+                  <!-- ============================================ -->
+                  <% if (carrers && carrers.length > 0) { %>
+
+                    <% for (const carrer of carrers) { %>
+
+                      <tr data-record="true">
+
+                        <td><%= carrer.id %></td>
+                        <td><%= carrer.name %></td>
+                        <td><%= carrer.lastname %></td>
+                        <td><%= carrer.code %></td>
+                        <td><%= carrer.cycle %></td>
+
+                        <td class="text-end">
+
+                          <button
+                            type="button"
+                            class="btn btn-sm btn-outline-secondary me-1"
+                            onclick="editar(<%= carrer.id %>, event)"
+                          >
+                            <i class="fa fa-edit"></i>
+                            Editar
+                          </button>
+
+                          <button
+                            type="button"
+                            class="btn btn-sm btn-outline-danger"
+                            onclick="eliminar(<%= carrer.id %>, event)"
+                          >
+                            <i class="fa fa-trash"></i>
+                            Eliminar
+                          </button>
+
+                        </td>
+
+                      </tr>
+
+                    <% } %>
+
+                  <% } else { %>
+
+                    <!-- Se muestra cuando inicialmente no hay registros -->
+                    <tr id="emptyRow">
+                      <td colspan="6" class="text-center text-muted py-4">
+                        No se encontraron carreras.
+                      </td>
+                    </tr>
+
+                  <% } %>
+
+
+                  <!-- Se usa cuando una búsqueda no encuentra coincidencias -->
+                  <tr id="noSearchResults" style="display: none;">
+                    <td colspan="6" class="text-center text-muted py-4">
+                      No se encontraron coincidencias.
                     </td>
-
-                    <td>
-                      <%= carrer.name %>
-                    </td>
-
-                    <td class="text-end">
-
-                      <button
-                        class="btn btn-sm btn-outline-secondary me-1"
-                        onclick="editar(<%= carrer.id %>, event)"
-                      >
-                        <i class="fa fa-edit" ></i>
-                        Editar
-                    </button>
-
-                      <button
-                        class="btn btn-sm btn-outline-danger"
-                        onclick="eliminar(<%= carrer.id %>, event)"
-                      >
-                        <i class="fa fa-trash"></i>
-                        Eliminar
-                    </button>
-
-                    </td>
-
                   </tr>
 
-                <% } %>
+                </tbody>
 
-              <% } else { %>
+              </table>
 
-                <tr>
-                  <td colspan="3" class="text-center text-muted py-4">
-                    No se encontraron carreras.
-                  </td>
-                </tr>
+            </div>
 
-              <% } %>
-
-            </tbody>
-
-          </table>
-
+          </div>
         </div>
 
       </div>
 
     </div>
 
-  </div>
 
-</div>
+    <script>
 
-</div> </main>
+      /* ==========================================================
+         BLOQUE 10: FUNCIÓN LIMPIAR
+         Reinicia todos los campos y vuelve el formulario
+         al modo "Nueva Carrera".
+      ========================================================== */
+      function limpiar(event) {
 
-<script>
-    let carrerRows = document.getElementById("carrers").children[1].children.length;
+        if (event) {
+          event.preventDefault();
+        }
 
-    function limpiar(event){
-      event.preventDefault();
-      document.getElementById("carrerId").value="";
-      document.getElementById("name").value="";
-      document.getElementById("cardTitle").innerHTML = "Nueva Carrera";
-    }
+        document.getElementById("carrerID").value = "";
+        document.getElementById("name").value = "";
+        document.getElementById("lastname").value = "";
+        document.getElementById("code").value = "";
+        document.getElementById("cycle").value = "";
 
-    function agregar(event){
-        event.preventDefault();
+        document.getElementById("cardTitle").innerHTML =
+          '<i class="fa fa-plus me-2"></i>Nueva Carrera';
+      }
 
-        let name = document.getElementById("name").value;
-        let carrersTable = document.getElementById("carrers");
-        let carrerId = document.getElementById("carrerId").value;
 
-        if(carrerId==""){
-          let tr = document.createElement("TR");
-          let td1 = document.createElement("TD");
-          let td2 = document.createElement("TD");
-          let td3 = document.createElement("TD");
+      /* ==========================================================
+         BLOQUE 11: OBTENER EL SIGUIENTE ID VISUAL
+         Revisa los IDs existentes y calcula uno nuevo.
+         Esto solo sirve para los registros agregados en el navegador.
+      ========================================================== */
+      function obtenerSiguienteId() {
 
-          carrerRows = carrerRows + 1;
-          td1.innerHTML = carrerRows;
-          td2.innerHTML = name;
+        const tbody = document.getElementById("carrers").tBodies[0];
 
-          tr.appendChild(td1);
-          tr.appendChild(td2);
-          tr.appendChild(td3);
+        let maxId = 0;
 
-          console.log(tr);
+        for (const tr of tbody.querySelectorAll('tr[data-record="true"]')) {
 
-          carrersTable.children[1].appendChild(tr);
-        }else{
-          let tbody = carrersTable.children[1];
+          const idActual = parseInt(
+            tr.children[0].textContent.trim(),
+            10
+          );
 
-          for (let tr of tbody.children) {
-            console.log("1 ++++++++++++++++++++")
-            console.log(typeof tr.children[0].innerHTML.trim())
-            console.log(typeof carrerId)
-            if(tr.children[0].innerHTML.trim() == carrerId){
-              tr.children[1].innerHTML = name;
-              document.getElementById("carrerId").value="";
-              document.getElementById("name").value="";
-              document.getElementById("cardTitle").innerHTML = "Nueva Carrera";
-            }
+          if (!isNaN(idActual) && idActual > maxId) {
+            maxId = idActual;
           }
         }
-    }
 
-    function eliminar(id, event){
-        let tr = event.currentTarget.parentElement.parentElement;
+        return maxId + 1;
+      }
+
+
+      /* ==========================================================
+         BLOQUE 12: FUNCIÓN AGREGAR / GUARDAR
+         Lee el formulario.
+         - carrerID vacío: crea una fila nueva.
+         - carrerID con valor: modifica una fila existente.
+      ========================================================== */
+      function agregar(event) {
+
+        event.preventDefault();
+
+        const name = document.getElementById("name").value.trim();
+        const lastname = document.getElementById("lastname").value.trim();
+        const code = document.getElementById("code").value.trim();
+        const cycle = document.getElementById("cycle").value.trim();
+
+        const carrerID = document.getElementById("carrerID").value;
+        const table = document.getElementById("carrers");
+        const tbody = table.tBodies[0];
+
+
+        /* ----------------------------------------------------------
+           Validación básica:
+           evita agregar un registro si algún campo está vacío.
+        ---------------------------------------------------------- */
+        if (!name || !lastname || !code || !cycle) {
+          alert("Complete todos los campos.");
+          return;
+        }
+
+
+        /* ==========================================================
+           BLOQUE 13: CREAR UN REGISTRO NUEVO
+        ========================================================== */
+        if (carrerID === "") {
+
+          const emptyRow = document.getElementById("emptyRow");
+
+          if (emptyRow) {
+            emptyRow.remove();
+          }
+
+          const nuevoId = obtenerSiguienteId();
+
+          const tr = document.createElement("tr");
+          tr.setAttribute("data-record", "true");
+
+          const tdId = document.createElement("td");
+          const tdName = document.createElement("td");
+          const tdLastname = document.createElement("td");
+          const tdCode = document.createElement("td");
+          const tdCycle = document.createElement("td");
+          const tdActions = document.createElement("td");
+
+          tdId.textContent = nuevoId;
+          tdName.textContent = name;
+          tdLastname.textContent = lastname;
+          tdCode.textContent = code;
+          tdCycle.textContent = cycle;
+
+          tdActions.className = "text-end";
+
+
+          /* --------------------------------------------------------
+             BLOQUE 14: CREAR BOTONES DINÁMICOS
+             Estos botones se crean con JavaScript para la nueva fila.
+          -------------------------------------------------------- */
+          const btnEditar = document.createElement("button");
+          btnEditar.type = "button";
+          btnEditar.className =
+            "btn btn-sm btn-outline-secondary me-1";
+          btnEditar.innerHTML =
+            '<i class="fa fa-edit"></i> Editar';
+
+          btnEditar.onclick = function(event) {
+            editar(nuevoId, event);
+          };
+
+
+          const btnEliminar = document.createElement("button");
+          btnEliminar.type = "button";
+          btnEliminar.className =
+            "btn btn-sm btn-outline-danger";
+          btnEliminar.innerHTML =
+            '<i class="fa fa-trash"></i> Eliminar';
+
+          btnEliminar.onclick = function(event) {
+            eliminar(nuevoId, event);
+          };
+
+
+          /* --------------------------------------------------------
+             BLOQUE 15: ARMAR E INSERTAR LA NUEVA FILA
+             appendChild mete botones en la celda y celdas en la fila.
+          -------------------------------------------------------- */
+          tdActions.appendChild(btnEditar);
+          tdActions.appendChild(btnEliminar);
+
+          tr.appendChild(tdId);
+          tr.appendChild(tdName);
+          tr.appendChild(tdLastname);
+          tr.appendChild(tdCode);
+          tr.appendChild(tdCycle);
+          tr.appendChild(tdActions);
+
+          tbody.insertBefore(
+            tr,
+            document.getElementById("noSearchResults")
+          );
+
+          limpiar();
+          buscar();
+        }
+
+
+        /* ==========================================================
+           BLOQUE 16: EDITAR UN REGISTRO EXISTENTE
+           Busca por ID y reemplaza los valores de la fila.
+        ========================================================== */
+        else {
+
+          for (const tr of tbody.querySelectorAll('tr[data-record="true"]')) {
+
+            const idFila =
+              tr.children[0].textContent.trim();
+
+            if (idFila === carrerID) {
+
+              tr.children[1].textContent = name;
+              tr.children[2].textContent = lastname;
+              tr.children[3].textContent = code;
+              tr.children[4].textContent = cycle;
+
+              break;
+            }
+          }
+
+          limpiar();
+          buscar();
+        }
+      }
+
+
+      /* ==========================================================
+         BLOQUE 17: FUNCIÓN ELIMINAR
+         Desde el botón sube al TD y luego al TR.
+         Finalmente elimina toda la fila del DOM.
+      ========================================================== */
+      function eliminar(id, event) {
+
+        const tr =
+          event.currentTarget
+            .parentElement
+            .parentElement;
+
         tr.remove();
-    }
 
-    function editar(id, event){
-        let tr = event.currentTarget.parentElement.parentElement;
-        let idRow = tr.children[0].innerHTML;
-        let name = tr.children[1].innerHTML;
+        const tbody = document.getElementById("carrers").tBodies[0];
+        const registros =
+          tbody.querySelectorAll('tr[data-record="true"]');
 
-        document.getElementById("cardTitle").innerHTML = "Editar Carrera";
+        if (registros.length === 0) {
 
-        document.getElementById("name").value = name.trim();
-        document.getElementById("carrerId").value = id;
-    }
-</script>
+          const emptyRow = document.createElement("tr");
+          emptyRow.id = "emptyRow";
+
+          emptyRow.innerHTML = `
+            <td colspan="6" class="text-center text-muted py-4">
+              No se encontraron carreras.
+            </td>
+          `;
+
+          tbody.insertBefore(
+            emptyRow,
+            document.getElementById("noSearchResults")
+          );
+        }
+
+        limpiar();
+        buscar();
+      }
+
+
+      /* ==========================================================
+         BLOQUE 18: FUNCIÓN EDITAR
+         Obtiene los datos de la fila seleccionada y los coloca
+         nuevamente en el formulario.
+      ========================================================== */
+      function editar(id, event) {
+
+        const tr =
+          event.currentTarget
+            .parentElement
+            .parentElement;
+
+        const name = tr.children[1].textContent.trim();
+        const lastname = tr.children[2].textContent.trim();
+        const code = tr.children[3].textContent.trim();
+        const cycle = tr.children[4].textContent.trim();
+
+        document.getElementById("cardTitle").innerHTML =
+          '<i class="fa fa-edit me-2"></i>Editar Carrera';
+
+        document.getElementById("carrerID").value = id;
+        document.getElementById("name").value = name;
+        document.getElementById("lastname").value = lastname;
+        document.getElementById("code").value = code;
+        document.getElementById("cycle").value = cycle;
+
+        document.getElementById("name").focus();
+      }
+
+
+      /* ==========================================================
+         BLOQUE 19: FUNCIÓN BUSCAR
+         Lee lo escrito en el buscador y recorre las filas.
+         Busca coincidencias en nombre, apellido, código y ciclo.
+         Coincide -> muestra la fila.
+         No coincide -> oculta la fila.
+      ========================================================== */
+      function buscar() {
+
+        const texto =
+          document
+            .getElementById("searchInput")
+            .value
+            .toLowerCase()
+            .trim();
+
+        const tbody =
+          document.getElementById("carrers").tBodies[0];
+
+        let encontrados = 0;
+
+        const filas =
+          tbody.querySelectorAll('tr[data-record="true"]');
+
+        for (const tr of filas) {
+
+          const name =
+            tr.children[1].textContent.toLowerCase();
+
+          const lastname =
+            tr.children[2].textContent.toLowerCase();
+
+          const code =
+            tr.children[3].textContent.toLowerCase();
+
+          const cycle =
+            tr.children[4].textContent.toLowerCase();
+
+          const coincide =
+            name.includes(texto) ||
+            lastname.includes(texto) ||
+            code.includes(texto) ||
+            cycle.includes(texto);
+
+          if (coincide) {
+            tr.style.display = "";
+            encontrados++;
+          }
+          else {
+            tr.style.display = "none";
+          }
+        }
+
+
+        /* ----------------------------------------------------------
+           BLOQUE 20: MENSAJE CUANDO LA BÚSQUEDA NO ENCUENTRA NADA
+        ---------------------------------------------------------- */
+        const noSearchResults =
+          document.getElementById("noSearchResults");
+
+        const emptyRow =
+          document.getElementById("emptyRow");
+
+        if (emptyRow) {
+
+          if (texto === "") {
+            emptyRow.style.display = "";
+          }
+          else {
+            emptyRow.style.display = "none";
+          }
+        }
+
+        if (
+          texto !== "" &&
+          filas.length > 0 &&
+          encontrados === 0
+        ) {
+          noSearchResults.style.display = "";
+        }
+        else {
+          noSearchResults.style.display = "none";
+        }
+      }
+
+    </script>
+
+  </div>
+</main>
